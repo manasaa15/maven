@@ -3,14 +3,14 @@ pipeline {
 
     tools {
         // Use the configured JDK and Maven versions in Jenkins
-        jdk 'JDK11'
-        maven 'Maven3'
+        jdk 'jdk11'
+        maven 'sonarmaven'
     }
 
     environment {
         // Define SonarQube environment variables
-        SONARQUBE_SERVER = 'SonarQube_Server' // Name configured in Jenkins
-        SONARQUBE_TOKEN = credentials('sonarqube-token') // Add the token in Jenkins Credentials
+        SONARQUBE_SERVER = 'sonarqube server' // Name configured in Jenkins
+        SONARQUBE_TOKEN = credentials('maven') // Add the token in Jenkins Credentials
     }
 
     stages {
@@ -32,7 +32,11 @@ pipeline {
             steps {
                 // Run SonarQube analysis
                 withSonarQubeEnv('SonarQube_Server') { // SonarQube server name in Jenkins
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN'
+                    mvn clean verify sonar:sonar \
+                    -Dsonar.projectKey=maven \
+                    -Dsonar.projectName='maven' \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.token=sqp_fd95b09b6042dcda413e8db30dcbf02d6b86f00f
                 }
             }
         }
