@@ -32,7 +32,7 @@ pipeline {
             steps {
                 // Run SonarQube analysis
                 withSonarQubeEnv('SonarQube_Server') { // SonarQube server name in Jenkins
-                    sh """
+                    bat """
                     mvn clean verify sonar:sonar \
                     -Dsonar.projectKey=maven \
                     -Dsonar.projectName='maven' \
