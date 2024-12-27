@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         // Define SonarQube environment variables
-        SONARQUBE_SERVER = 'sonarqube server' // Name configured in Jenkins
+        SONARQUBE_SERVER = 'sonarqube_server' // Name configured in Jenkins
         SONARQUBE_TOKEN = credentials('maven') // Add the token in Jenkins Credentials
     }
 
@@ -32,11 +32,13 @@ pipeline {
             steps {
                 // Run SonarQube analysis
                 withSonarQubeEnv('SonarQube_Server') { // SonarQube server name in Jenkins
+                    sh """
                     mvn clean verify sonar:sonar \
                     -Dsonar.projectKey=maven \
                     -Dsonar.projectName='maven' \
                     -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.token=sqp_fd95b09b6042dcda413e8db30dcbf02d6b86f00f
+                    -Dsonar.login=$SONARQUBE_TOKEN
+                    """
                 }
             }
         }
